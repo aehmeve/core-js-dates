@@ -17,8 +17,9 @@
  * '01 Jan 1970 00:00:00 UTC' => 0
  * '04 Dec 1995 00:12:00 UTC' => 818035920000
  */
-function dateToTimestamp(/* date */) {
-  throw new Error('Not implemented');
+function dateToTimestamp(date) {
+  const newDate = new Date(date);
+  return newDate.valueOf();
 }
 
 /**
@@ -31,8 +32,9 @@ function dateToTimestamp(/* date */) {
  * Date(2023, 5, 1, 8, 20, 55) => '08:20:55'
  * Date(2015, 10, 20, 23, 15, 1) => '23:15:01'
  */
-function getTime(/* date */) {
-  throw new Error('Not implemented');
+function getTime(date) {
+  const timeString = date.toTimeString();
+  return timeString.slice(0, 8);
 }
 
 /**
@@ -46,8 +48,37 @@ function getTime(/* date */) {
  * '03 Dec 1995 00:12:00 UTC' => 'Sunday'
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
-function getDayName(/* date */) {
-  throw new Error('Not implemented');
+function getDayName(date) {
+  const newDate = new Date(date);
+  let dayName = '';
+
+  switch (newDate.getUTCDay()) {
+    case 0:
+      dayName = 'Sunday';
+      break;
+    case 1:
+      dayName = 'Monday';
+      break;
+    case 2:
+      dayName = 'Tuesday';
+      break;
+    case 3:
+      dayName = 'Wednesday';
+      break;
+    case 4:
+      dayName = 'Thursday';
+      break;
+    case 5:
+      dayName = 'Friday';
+      break;
+    case 6:
+      dayName = 'Saturday';
+      break;
+    default:
+      dayName = `Can't determine day`;
+  }
+
+  return dayName;
 }
 
 /**
@@ -61,8 +92,18 @@ function getDayName(/* date */) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const day = date.getUTCDay();
+
+  if (day < 5) {
+    date.setUTCDate(date.getUTCDate() + (5 - day));
+  } else if (day > 5) {
+    date.setUTCDate(date.getUTCDate() + 6);
+  } else {
+    date.setUTCDate(date.getUTCDate() + 7);
+  }
+
+  return date;
 }
 
 /**
@@ -76,8 +117,9 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const newDate = new Date(year, month, 0);
+  return newDate.getDate();
 }
 
 /**
@@ -91,8 +133,14 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const startDate = new Date(dateStart);
+  const endDate = new Date(dateEnd);
+  const convertMsToDaysRate = 1000 * 60 * 60 * 24;
+  const periodInMs = endDate.valueOf() - startDate.valueOf();
+  const daysNumber = periodInMs / convertMsToDaysRate + 1;
+
+  return daysNumber;
 }
 
 /**
@@ -112,8 +160,18 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  let dateInPeriod = false;
+  const dateInMs = new Date(date).valueOf();
+  const periodStartInMs = new Date(period.start).valueOf();
+  const periodEndInMs = new Date(period.end).valueOf();
+
+  if (dateInMs >= periodStartInMs && dateInMs <= periodEndInMs) {
+    dateInPeriod = true;
+    return true;
+  }
+
+  return dateInPeriod;
 }
 
 /**
@@ -127,8 +185,11 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const newDate = new Date(date);
+  const formattedDate = newDate.toLocaleString('en-US', { timeZone: 'UTC' });
+
+  return formattedDate;
 }
 
 /**
