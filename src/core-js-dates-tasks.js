@@ -219,7 +219,7 @@ function getCountWeekendsInMonth(month, year) {
 
 /**
  * Returns the week number of the year for a given date.
- * The first week is the one that falls on January 1.
+ * The first week of the year is defined according to ISO8601.
  * The first day of the week is Monday.
  *
  * @param {Date} date - The date for which to find the week number.
@@ -232,30 +232,10 @@ function getCountWeekendsInMonth(month, year) {
  */
 function getWeekNumberByDate(date) {
   const year = date.getFullYear();
-  let startOfFirstWeek = new Date(year, 0, 1);
-  let firstWeekStartsFromMonday = false;
+  const startOfYear = new Date(year, 0, 1);
+  const weekNumber =
+    Math.floor((date - startOfYear) / (1000 * 60 * 60 * 24 * 7)) + 1;
 
-  if (startOfFirstWeek.getDay() === 1) {
-    firstWeekStartsFromMonday = true;
-  }
-
-  for (let i = 1; i < 7; i += 1) {
-    startOfFirstWeek = new Date(date.getFullYear(), 0, i);
-    if (startOfFirstWeek.getDay() === 1) {
-      break;
-    }
-  }
-
-  const timeDifference = Math.abs(date - startOfFirstWeek);
-  let weekNumber = Math.ceil(timeDifference / (1000 * 60 * 60 * 24 * 7));
-  if (!firstWeekStartsFromMonday) {
-    weekNumber += 1;
-  }
-  if (date.getDay() === 1) {
-    weekNumber += 1;
-  }
-
-  weekNumber = Math.ceil(weekNumber);
   return weekNumber;
 }
 
